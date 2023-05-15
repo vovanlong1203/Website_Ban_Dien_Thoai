@@ -1,0 +1,113 @@
+{% extends 'store/layouts/main.html' %}
+
+{% block title %}
+Checkout
+{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>Checkout form</h2>
+    </div>
+    <div class="row g-5">
+        <div class="col-md-5 col-lg-4 order-md-last">
+            <div class="panel panel-info">
+
+                <h4 class="mb-3">Review Order </h4>
+
+                <div class="panel-body">
+                    {% for item in items %}
+                    
+                    <div class="form-group">
+                        <div class="col-sm-3 col-xs-3">
+                            <img class="img-responsive" src="{{ item.product.image.url }}" style="width:75px; height:75px;"/>
+                        </div>
+                        <div class="col-sm-6 col-xs-6">
+                            <div class="col-xs-12">{{ item.product.name }}</div>
+                            <div class="col-xs-12"><small>Quantity:<span>{{ item.quantity }} </span></small></div>
+                        </div>
+                        <div class="col-sm-3 col-xs-3 text-right">
+                            <h6><span></span>{{ item.price|floatformat:"g" }}₫</h6>
+                        </div>
+                    </div>
+                    <div class="form-group"><hr /></div>
+                    {% endfor %}
+                    
+                    <div class="form-group"><hr /></div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <strong>Order Total</strong>
+                            <div class="pull-right"><span></span><span>{{cart.total_price|floatformat:"g" }}₫</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<br>
+        </div>
+        <div class="col-md-6 col-lg-7">
+            <h4 class="mb-3">Billing address</h4>
+            <form class="needs-validation" novalidate action="{% url 'save_order' %}" method="post" >
+                {% csrf_token  %}
+                <div class="row g-3">
+
+                    <div class="col-12">
+                        <label for="address2" class="form-label">User name </label>
+                        <input type="text" class="form-control" id="address2" name="username" placeholder="User name" value="{{ user.username }}" required />
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="firstName" class="form-label">First name</label>
+                        <input type="text" class="form-control" id="firstName" name="firstname" placeholder="First name" value="{{ user.first_name }}" required />
+                        <div class="invalid-feedback">
+                            Valid first name is required.
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="lastName" class="form-label">Last name</label>
+                        <input type="text" class="form-control" id="lastName" name="lastname" placeholder="Last name" value="{{ user.last_name }}" required />
+                        <div class="invalid-feedback">
+                            Valid last name is required.
+                        </div>
+                    </div>
+
+
+                    <div class="col-12">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" value="{{ user.email }}" required />
+
+                    </div>
+
+
+                    <div class="col-12">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address" name="address" placeholder="Address" required />
+                    </div>
+
+
+                    <div class="col-12">
+                        <label for="number" class="form-label">Phone Number</label></label>
+                        <input type="number" class="form-control" id="phonenumber" name="phonenumber" placeholder="Phone number" required />
+                    </div>
+
+
+                </div>
+
+                <hr class="my-4">
+
+                <button class="w-100 btn btn-danger btn-lg" type="submit">Continue to checkout</button>
+                
+            </form>
+            <br>
+        </div>
+    </div>
+</div>
+
+
+
+
+    {% include 'store/inc/footer.html' %}
+
+{% endblock content %}

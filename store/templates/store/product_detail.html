@@ -1,0 +1,96 @@
+{% extends 'store/layouts/main.html' %}
+{% block title %}Product Detail{% endblock title %}
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-sm-6 text-center align-self-center">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid img-thumbnail">
+        </div>
+        <div class="col-sm-5 offset-sm-1">
+            <h2>Product Title: {{product.name}}</h2>
+        <hr>
+            <p>{{ product.description}} </p> <br>
+            {% if product.selling_price != product.original_price %}
+            <h4>Rs. {{ product.selling_price|floatformat:"g" }}₫ <small class="fw-light text-decoration-line-through">{{ product.original_price|floatformat:"g" }}₫</small></h4> <br>
+            {% else %}
+            <h4>Rs. {{ product.selling_price|floatformat:"g" }}₫ </h4> <br>
+            {% endif %}
+            {% if request.user.is_authenticated %}
+            <button value="{{ product.id }}" class="btn-add-to-cart btn btn-primary shadow px-5 py-2" >Add to cart</button>
+            {% else %}
+            <a href="{% url 'login' %}" class="btn-add-to-cart btn btn-primary shadow px-5 py-2" >Add to cart</a>
+
+            {%endif%}
+        </div>
+    </div>
+</div>
+
+
+  <div class="container mt-5">
+    <h5 class="text-uppercase font-weight-bold">Review</h5>
+    <hr class="mt-0 pt-0">
+    <div class="row">
+      <div class="col-sm-7 mt-2">
+        {% for review in reviews %}
+        <div class="review-heading">
+          <span href="text-capitalize"><i class="fas fa-user mr-1"></i> {{ review.user.username }}  </span>
+          <span href="ml-2"><i class="fas fa-clock mr-1"></i>   {{ review.created_at }}    </span>
+          <i class="fas fa-star {%if review.rate > 4%} checked {% endif %}" style="float: right;"></i>
+          <i class="fas fa-star {%if review.rate > 3%} checked {% endif %}" style="float: right;"></i>
+          <i class="fas fa-star {%if review.rate > 2%} checked {% endif %} " style="float: right;"></i>
+          <i class="fas fa-star {%if review.rate > 1%} checked {% endif %}" style="float: right;"></i>
+          <i class="fas fa-star {%if review.rate > 0%} checked {% endif %}" style="float: right;"></i>
+        </div>
+        <div class="review-body mt-2">
+          <p style="text-align: left;">{{ review.comment }}</p>
+        </div>
+        <hr class="mt-0 pt-0">
+        {% endfor %}
+      </div>
+      
+   
+
+      <div class="col-sm-5 mt-2">
+        <h5 class="text-uppercase font-weight-bold">Write Your Review</h5>
+    
+        <form class="row" action="{% url 'reivew' %}" method="GET">
+          {% csrf_token %}
+          <input type="hidden" name="prod_id" id="prod_id" value="{{ product.id }}"/>
+          <div class="form-group">
+            <textarea class="form-control type="text" name="comment" placeholder="Your Review" required></textarea>
+          </div>
+          <p class="text-uppercase font-weight-bold" style="text-align: left;">Your Rating: </p>
+          <div class="form-group">
+            <div class="input rating">
+              <div class="rating-wrapper" >
+                <input type="radio" id="star-5" name="rate" value="5"required="required" />
+                <label for="star-5" class="fas fa-star"></label>
+                <input type="radio" id="star-4" name="rate" value="4" required="required" />
+                <label for="star-4" class="fas fa-star"></label>
+                <input type="radio" id="star-3" name="rate" value="3" required="required" />
+                <label for="star-3" class="fas fa-star"></label>
+                <input type="radio" id="star-2" name="rate" value="2" required="required" />
+                <label for="star-2" class="fas fa-star"></label>
+                <input type="radio" id="star-1" name="rate" value="1" required="required" />
+                <label for="star-1" class="fas fa-star"></label>
+              </div>
+            </div>
+          </div>
+          <div>
+            {% if request.user.is_authenticated  %}
+            <br>
+              <button class="btn btn-danger " type="submit">POST</button>
+            {% else %}
+              <p>Vui lòng đăng nhập để vào bình luận <a href="{% url 'login' %}" style="text-decoration: none;">Login</a> </p>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+
+
+  {% include 'store/inc/footer.html' %}
+
+{% endblock %} 

@@ -1,0 +1,66 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+<br><br>
+<div class="container mt-5">
+
+    <legend>ADD PRODUCT</legend>
+    <form action="{% url 'add_product' %}" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+    
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">Category:  </label>
+        <select class="form-select" aria-label="Default select example" name="category" >
+            <option value=""> -------------------  </option>
+            {%  for c in category_list %}
+            <option value="{{ c }}" >{{ c }}</option>
+            {%endfor%}
+          </select>
+    </div>
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">Name</label>
+        <input type="text" id="form6Example3" class="form-control" name="name" value="" required/>
+    </div>
+
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">image</label>
+        <input class="input-file" type="file" name="image" required>
+    </div>
+
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">Quantity</label>
+        <input type="number" name="quantity" class="form-control" />
+    </div>
+
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">Description</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description" required></textarea>
+    </div>
+    
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">Original price</label>
+        <input type="number" name="original_price" class="form-control" />
+    </div>
+    
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">Selling price</label>
+        <input type="number" name="selling_price" class="form-control" />
+    </div>
+      
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example5">Status</label>
+        <input type="checkbox" name="status" />
+    </div>
+
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example5">Trending</label>
+        <input type="checkbox" name="trending" />
+    </div>
+      
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary btn-block mb-4">Update </button>
+      </form>
+</div>
+
+{% endblock content %}

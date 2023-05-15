@@ -1,0 +1,87 @@
+{% extends 'store/layouts/main.html' %}
+{% block title %}
+Search product
+{% endblock title %}
+
+{% block content %}
+    {% include 'store/inc/slidebar.html' %}
+
+    <!-- Featured Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5 pb-3">
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fas fa-check text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Quality Product</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fas fa-shipping-fast text-primary m-0 mr-2"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Free Shipping</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fas fa-exchange-alt text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">14-Day Return</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fas fa-phone-volume text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">24/7 Support</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Featured End -->
+    {% if product %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h5 class="">Sản phẩm tìm thấy</h5>
+                <hr>
+                <div class="row">
+                    {% for pro in product  %}
+                    <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
+                        <div class="card w-100 my-2 shadow-2-strong">
+                            <img src="{{ MEDIA_URL }}{{ pro.image.url }}" class="card-img-top" style="aspect-ratio: 1 / 1" />
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="card-title text-center">{{ pro.name }}</h6>
+                                {% if pro.selling_price != pro.original_price %}
+                                <p class="card-text"> {{ pro.selling_price|floatformat:"g" }}₫  <small class="fw-light text-decoration-line-through">{{ pro.original_price|floatformat:"g" }}₫</small></p>
+                                {% else %}
+                                <p class="card-text"> {{ pro.selling_price|floatformat:"g" }}₫ </p>
+                                {%endif%}
+                                
+                                <div class="align-items-end pt-3 px-0 pb-0 mt-auto">
+                                    <a href="{% url 'productdetail' pro.id  %}" class="btn btn-primary ">View details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    
+    </div>
+    {% else %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h5 class="">Không tìm thấy Sản phẩm </h5>
+                <hr>
+            </div>
+        </div>
+    
+    </div>
+
+    {% endif %}
+
+
+    {% include 'store/inc/footer.html' %}
+
+{% endblock content %}
+

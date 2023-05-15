@@ -1,0 +1,259 @@
+{% extends 'store/layouts/main.html' %}
+{% load static %}
+{% block title %}
+Home
+{% endblock title %}
+
+{% block content %}
+{% include 'store/inc/slidebar.html' %}
+<style>
+
+main .text{
+    padding: 10px;
+    text-align: center;
+    color: #554;
+}
+.text h1{
+    font-size: 50px;
+}
+.text p{
+    width: 60%;
+    padding: 5px;
+    margin: auto;
+    line-height: 30px;
+}
+main header{
+    width: 98%;
+    height: 60px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    justify-content: space-between;
+    border-bottom: 2px solid #ddd;
+}
+header p span{
+    font-size: 40px;
+    margin: 0 5px;
+    cursor: pointer;
+     width: 30px;
+    height: 30px;
+    display: inline-block;
+    line-height: 19px;
+    text-align: center;
+    border-radius: 3px;
+}
+
+section{
+    width: 98%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+}
+section::-webkit-scrollbar{
+    display: none;
+}
+section .productslide{
+    min-width: 24%;
+    margin:  0 20px  0 0;
+    border-radius: 20px;
+    position: relative;
+    left: 0;
+    transition: 0.5s;
+
+}
+
+
+
+</style>
+
+    <!-- Featured Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5 pb-3">
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fas fa-check text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Quality Product</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fas fa-shipping-fast text-primary m-0 mr-2"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Free Shipping</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fas fa-exchange-alt text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">14-Day Return</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fas fa-phone-volume text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">24/7 Support</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <br>
+
+	<main>
+		
+		<header>
+            <h3>Danh mục</h3>
+            <p>
+				<span>&#139;</span>
+				<span>&#155;</span>
+			</p>
+		</header>
+		<section>
+			{% for cat in category %}
+            
+            <div class="col-lg-3 col-md-6 col-sm-6 d-flex productslide">
+                <a href="{% url 'category_view' cat.id %}" style="text-decoration: none;">
+                    <div class="card w-100 my-2 shadow-2-strong">
+                        <img src="{{ cat.image.url }}" class="card-img-top" style="width:300px; height:250px;" />
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="card-title text-center">{{ cat.name }}</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+			{% endfor %}
+		</section>
+	</main>
+
+	
+    <!-- Featured End
+    <br>
+    <div class="container my-5 class1">
+        <header class="mb-4">
+            <h3>Danh mục</h3>
+          </header>
+          <hr>
+        <div class="row">
+            {% for cat in category  %}
+            <div class="col-lg-3 col-md-6 col-sm-6 d-flex slide">
+                <a href="{% url 'category_view' cat.id %}" style="text-decoration: none;">
+                    <div class="card w-100 my-2 shadow-2-strong">
+                        <img src="{{ cat.image.url }}" class="card-img-top" style="width:300px; height:250px;" />
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="card-title text-center">{{ cat.name }}</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div> -->
+
+    <br>
+    <div class="container my-5">
+        <header class="mb-4">
+            <h3>Sản phẩm nổi bật</h3>
+          </header>
+          <hr>
+        <div class="row">
+            {% for pro in product_trend  %}
+            <div class="col-lg-3 col-md-6 col-sm-6 d-flex .carousel-item">
+                <div class="card w-100 my-2 shadow-2-strong">
+                    <img src="{{ MEDIA_URL }}{{ pro.image.url }}" class="card-img-top" style="aspect-ratio: 1 / 1" />
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title text-center">{{ pro.name }}</h6>
+                        {% if pro.selling_price != pro.original_price %}
+                        <p class="card-text"> {{ pro.selling_price|floatformat:"g" }}₫  <small class="fw-light text-decoration-line-through">{{ pro.original_price|floatformat:"g" }}₫</small></p>
+                        {% else %}
+                        <p class="card-text"> {{ pro.selling_price|floatformat:"g" }}₫ </p>
+                        {%endif%}
+                        
+                        <div class="align-items-end pt-3 px-0 pb-0 mt-auto">
+                            <a href="{% url 'productdetail' pro.id  %}" class="btn btn-primary ">View details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    
+<br>
+    <div class="container my-5">
+        <header class="mb-4">
+            <h3>Các sản phẩm khác</h3>
+          </header>
+          <hr>
+        <div class="row">
+            {% for pro in product  %}
+            <div class="col-lg-3 col-md-6 col-sm-6 d-flex pro_slidebar">
+                <div class="card w-100 my-2 shadow-2-strong">
+                    <img src="{{ MEDIA_URL }}{{ pro.image.url }}" class="card-img-top" style="aspect-ratio: 1 / 1" />
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title text-center">{{ pro.name }}</h6>
+                        {% if pro.selling_price != pro.original_price %}
+                        <p class="card-text"> {{ pro.selling_price|floatformat:"g" }}₫  <small class="fw-light text-decoration-line-through">{{ pro.original_price|floatformat:"g" }}₫</small></p>
+                        {% else %}
+                        <p class="card-text"> {{ pro.selling_price|floatformat:"g" }}₫ </p>
+                        {%endif%}
+                        
+                        <div class="align-items-end pt-3 px-0 pb-0 mt-auto">
+                            <a href="{% url 'productdetail' pro.id  %}" class="btn btn-primary ">View details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        window.addEventListener('load', function() {
+          let span = document.getElementsByTagName('span');
+          let product = document.getElementsByClassName('productslide');
+          let product_page = Math.ceil(product.length/4);
+          console.log(product_page)
+          let l = 0;
+          let movePer = 25.34;
+          let maxMove = 203;
+          // mobile_view  
+          let mob_view = window.matchMedia("(max-width: 768px)");
+          if (mob_view.matches) {
+            movePer = 50.36;
+            maxMove = 504;
+          }
+        
+          let right_mover = ()=>{
+            l = l + movePer;
+            if (product == 1){l = 0; }
+            for(const i of product) {
+              if (l > maxMove){l = l - movePer;}
+              i.style.left = '-' + l + '%';
+            }
+          };
+        
+          let left_mover = ()=>{
+            l = l - movePer;
+            if (l<=0){l = 0;}
+            for(const i of product) {
+              if (product_page>1){
+                i.style.left = '-' + l + '%';
+              }
+            }
+          };
+          span[7].onclick = ()=>{right_mover();};
+          span[6].onclick = ()=>{left_mover();};
+        });
+        
+            </script>
+
+    {% include 'store/inc/footer.html' %}
+
+
+{% endblock content %}
+
+

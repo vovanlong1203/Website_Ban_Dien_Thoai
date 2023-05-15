@@ -1,0 +1,101 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+
+<head>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  
+    <style media="screen">
+      a:link {
+        text-decoration: none;
+      }
+  
+      h6 {
+        text-align: center;
+      }
+  
+      .row {
+        margin: 100px;
+      }
+  
+      .float{
+      position:fixed;
+      width:70px;
+      height:70px;
+      bottom:60px;
+      right:60px;
+      background-color:red;
+      color:#FFF;
+      border-radius:50px;
+      text-align:center;
+      box-shadow: 3px 3px 3px #999;
+  }
+  
+  .my-float{
+      margin-top:22px;
+  }
+    </style>
+  </head>
+  
+  
+  
+  <div class="container">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h6 class="panel-title">Feedback List</h6>
+      </div>
+      <table class="table table-hover" id="dev-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Subject</th>
+            <th>Message</th>
+  
+          </tr>
+        </thead>
+        {% for p in contact_us %}
+        {% if p %}
+  
+        <tr>
+          <td> {{p.name}}</td>
+          <td>{{ p.email }}</td>
+          <td>{{p.subject}}</td>
+          <td>{{p.message}}</td>
+  
+        </tr>
+        {%else%}
+        <br><br><br>
+        <h1>no Contact us</h1>
+        {% endif %}
+        {% endfor %}
+      </table>
+    </div>
+
+    {% if contact_us.has_other_pages %}
+    <ul class="pagination">
+      {% if contact_us.has_previous %}
+        <li><a href="?page={{ contact_us.previous_page_number }}">&laquo;</a></li>
+      {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+      {% endif %}
+      {% for i in contact_us.paginator.page_range %}
+        {% if contact_us.number == i %}
+          <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+          <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if contact_us.has_next %}
+        <li><a href="?page={{ contact_us.next_page_number }}">&raquo;</a></li>
+      {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+      {% endif %}
+    </ul>
+  {% endif %}
+  </div>
+
+{% endblock content %}

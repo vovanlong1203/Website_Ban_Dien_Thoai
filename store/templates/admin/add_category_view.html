@@ -1,0 +1,40 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+<br><br>
+<div class="container mt-5">
+
+    <legend>ADD CATEGORY</legend>
+    <form action="{% url 'add_category' %}" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">Name</label>
+        <input type="text" id="form6Example3" class="form-control" name="name" value="" required/>
+    </div>
+
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">image</label>
+        <input class="input-file" type="file" name="image" required>
+    </div>
+
+
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">Description</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description" required></textarea>
+    </div>
+    
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example5">Status</label>
+        <input type="checkbox" name="status" />
+    </div>
+
+      
+
+      
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary btn-block mb-4">Update </button>
+      </form>
+</div>
+
+{% endblock content %}

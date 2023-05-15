@@ -1,0 +1,111 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+
+    .float{
+	position:fixed;
+	width:70px;
+	height:70px;
+	bottom:60px;
+	right:60px;
+	background-color:red;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 3px 3px 3px #999;
+}
+
+.my-float{
+	margin-top:22px;
+}
+  </style>
+</head>
+
+
+
+<div class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title">Total Product List</h6>
+    </div>
+    <table class="table table-hover" id="dev-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Image</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Update</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      {% for p in categorys %}
+      {% if p %}
+
+      <tr>
+        <td> {{p.name}}</td>
+        <td> <img src="{{  p.image.url  }}" alt="Profile Pic" height="40px" width="40px" /></td>
+        <td>{{p.description}}</td>
+        <td>{{p.status}}</td>
+
+        <td><a class="btn btn-primary btn-xs" href="{% url 'view_update_category' p.id %}"><span class="glyphicon glyphicon-edit"></span></a></td>
+        <td><a class="btn btn-danger btn-xs" href="{% url 'delete_category' p.id %}"><span class="glyphicon glyphicon-trash"></span></a></td>
+
+      </tr>
+      {%else%}
+      <br><br><br>
+      <h1>no products</h1>
+      {% endif %}
+      {% endfor %}
+    </table>
+  </div>
+
+
+  {% if categorys.has_other_pages %}
+  <ul class="pagination">
+    {% if categorys.has_previous %}
+      <li><a href="?page={{ categorys.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in categorys.paginator.page_range %}
+      {% if categorys.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if categorys.has_next %}
+      <li><a href="?page={{ categorys.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+</div>
+<!-- add product floating button -->
+<a href="{% url 'add_category_view'  %}" class="float">
+<i class="fa fa-plus my-float"></i>
+</a>
+
+
+{% endblock content %}

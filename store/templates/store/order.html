@@ -1,0 +1,260 @@
+{% extends 'store/layouts/main.html' %}
+
+{% block title %}
+Order
+{% endblock title %}
+
+{% block content %}
+
+<style media="screen">
+    @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+  
+  body {
+      /* background-color: #8C9EFF; */
+      font-family: 'Open Sans', serif
+  }
+  
+  .container {
+      margin-top: 0px;
+      margin-bottom: 0px
+  }
+  
+  .card {
+      position: relative;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      min-width: 0;
+      word-wrap: break-word;
+      background-color: #fff;
+      background-clip: border-box;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 0.10rem
+  }
+  
+  .card-header:first-child {
+      border-radius: calc(0.37rem - 1px) calc(0.37rem - 1px) 0 0
+  }
+  
+  .card-header {
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 0;
+      background-color: #fff;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1)
+  }
+  
+  .track {
+      position: relative;
+      background-color: #ddd;
+      height: 7px;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      margin-bottom: 60px;
+      margin-top: 50px
+  }
+  
+
+
+  .track .step {
+      -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+      flex-grow: 1;
+      width: 25%;
+      margin-top: -18px;
+      text-align: center;
+      position: relative
+  }
+  
+  .track .step.active:before {
+      background: #FF5722
+  }
+  
+  .track .step::before {
+      height: 7px;
+      position: absolute;
+      content: "";
+      width: 100%;
+      left: 0;
+      top: 18px
+  }
+  
+  .track .step.active .icon {
+      background: #ee5435;
+      color: #fff
+  }
+  
+  .track .icon {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      position: relative;
+      border-radius: 100%;
+      background: #ddd
+  }
+  
+  .track .step.active .text {
+      font-weight: 400;
+      color: #000
+  }
+  
+  .track .text {
+      display: block;
+      margin-top: 7px
+  }
+  
+.row{
+    --bs-gutter-x: unset;
+}
+
+  .itemside {
+      position: relative;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      width: 100%
+  }
+  
+  .itemside .aside {
+      position: relative;
+      -ms-flex-negative: 0;
+      flex-shrink: 0
+  }
+  
+  .img-sm {
+      width: 80px;
+      height: 80px;
+      padding: 7px
+  }
+  
+  ul.row,
+  ul.row-sm {
+      list-style: none;
+      padding: 0
+  }
+  
+  .itemside .info {
+      padding-left: 15px;
+      padding-right: 7px
+  }
+  
+  .itemside .title {
+      display: block;
+      margin-bottom: 5px;
+      color: #212529
+  }
+  
+  p {
+      margin-top: 0;
+      margin-bottom: 1rem
+  }
+  
+  .btn-warning {
+      color: #ffffff;
+      background-color: #ee5435;
+      border-color: #ee5435;
+      border-radius: 1px
+  }
+  
+  .btn-warning:hover {
+      color: #ffffff;
+      background-color: #ff2b00;
+      border-color: #ff2b00;
+      border-radius: 1px
+  }
+  
+  </style>
+
+
+<!-- <h3 style="text-align:center; margin-top: 40px">Thank You For Your Order  <strong>{{request.user}}</strong> !</h3> <br><br> -->
+
+{% if orders  %}
+
+{% for item in order_items %}
+
+<div class="container mt-5 bg-primary ">
+    <h2>Đơn hàng {{ item.order.id }} - {{ item.order.date_ordered|date:"SHORT_DATETIME_FORMAT" }}</h2>
+    <header class="card-header" style="text-align:center;"> My Orders / Tracking </header>
+
+    
+    <article class="card">
+        <div class="card-body">
+            {% for orderitem in item.items %}
+            <ul class="row" style="margin-left:20px;margin-top:20px;">
+                <li class="col-md-3">
+                  <figure class="itemside mb-3">
+                      <div class="aside"><img src="{{ orderitem.product.image.url }}" class="img-sm border"></div>
+                      <figcaption class="info align-self-center">
+
+                          <p class="title"><strong>Name : </strong>{{orderitem.product.name}} <br> <strong>Price : </strong>{{orderitem.price |floatformat:"g"}} đ</p> <span class="text-muted"><strong>Quantity : </strong>{{orderitem.quantity}} </span> <br>
+                          <span class="text-muted"><strong>Total  : </strong>{{orderitem.total_price |floatformat:"g"}} đ</span>
+                      </figcaption>
+                  </figure>
+                </li>
+                <li class="col-md-3">
+                    <div class="col"> <strong>Shipment Address:</strong> <br> {{orderitem.order.address}}</div>
+                </li>
+                <li class="col-md-3">
+                    <div class="col"> <strong>Phone : </strong> <br> {{orderitem.order.phone}}</div>
+                </li>
+                <li class="col-md-3">
+                    <div class="col"> <strong>Status:</strong> <br> {{orderitem.order.status}} </div> <br>
+                </li>
+  
+                <hr>
+                <span>               
+                
+            </ul>
+            <hr>
+            
+            
+            {%endfor%}
+ 
+            <div class="track">
+                {%if item.order.status == 'Pending' %}
+                <div class="step active"> <span class="icon"> <i style="padding-top:5px;" class="fas fa-frown"></i> </span> <span class="text">Order Pending</span> </div>
+                <div class="step "> <span class="icon"> <i style="padding-top:5px; " class="fas fa-check"></i> </span> <span class="text"> Order Confirmed</span> </div>
+                <div class="step "> <span class="icon"> <i style="padding-top:5px; " class="fas fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                <div class="step "> <span class="icon"> <i style="padding-top:5px; " class="fas fa-home"></i> </span> <span class="text">Delivered</span> </div>
+                {%elif item.order.status == 'Order Confirmed' %}
+                <div class="step active"> <span class="icon"> <i style="padding-top:5px; " class="fas fa-frown"></i> </span> <span class="text">Order Pending</span> </div>
+                <div class="step active"> <span class="icon"> <i style="padding-top:5px; ;" class="fas fa-check"></i> </span> <span class="text"> Order Confirmed</span> </div>
+                <div class="step "> <span class="icon"> <i style="padding-top:5px; ;" class="fas fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                <div class="step "> <span class="icon"> <i style="padding-top:5px; ;" class="fas fa-home"></i> </span> <span class="text">Delivered</span> </div>
+                {%elif item.order.status == 'Out for Delivery'%}
+                <div class="step active"> <span class="icon"> <i style="padding-top:5px; " class="fas fa-frown"></i> </span> <span class="text">Order Pending</span> </div>
+                <div class="step active"> <span class="icon"> <i style="padding-top:5px; ;" class="fas fa-check"></i> </span> <span class="text"> Order Confirmed</span> </div>
+                <div class="step active"> <span class="icon"> <i style="padding-top:5px; ;" class="fas fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                <div class="step "> <span class="icon"> <i style="padding-top:5px; ;" class="fas fa-home"></i> </span> <span class="text">Delivered</span> </div>
+                {%else%}
+                <div class="step active"> <span class="icon"> <i style="padding-top:5px; ;" class="fas fa-frown"></i> </span> <span class="text">Order Pending</span> </div>
+                <div class="step active"> <span class="icon"> <i style="padding-top:5px; ;" class="fas fa-check"></i> </span> <span class="text"> Order Confirmed</span> </div>
+                <div class="step active"> <span class="icon"> <i style="padding-top:5px; ;" class="fas fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                <div class="step active"> <span class="icon"> <i style="padding-top:5px; ;" class="fas fa-home"></i> </span> <span class="text">Delivered</span> </div>
+                {%endif%}
+            </div>
+            <div class="">
+                Total: {{ item.order.total |floatformat:"g"}} đ
+            </div>
+        </div>
+    </article><br>
+</div>
+{% endfor %}
+
+<br><br><br><br><br>
+
+{% include 'store/inc/footer.html' %}
+{% else %}
+<div class="container vh-100">
+    <h1 class="text-center">Bạn chưa có đơn hàng</h1>
+</div>
+{% include 'store/inc/footer.html' %}
+
+{% endif %}
+
+{% endblock content %}

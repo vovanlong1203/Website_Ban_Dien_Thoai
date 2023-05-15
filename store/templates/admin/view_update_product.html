@@ -1,0 +1,75 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+<br><br>
+<div class="container mt-5">
+
+    <legend>ADD PRODUCT</legend>
+    <form action="{% url 'update_product'%}" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="hidden" value="{{ product.id }}" name="id_product" />
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">Category:  </label>
+        <select class="form-select" aria-label="Default select example" name="category" >
+            <option value=""> -------------------  </option>
+            {%  for c in category_list %}
+            {%  if c == product.category.name %}
+            <option value="{{ c }}"  selected>{{ c }}</option>
+            {% else %}
+            <option value="{{ c }}" >{{ c }}</option>
+            {% endif %}
+            {%endfor%}
+          </select>
+    </div>
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">Name</label>
+        <input type="text" id="form6Example3" class="form-control" name="name" value="{{ product.name }}" required/>
+    </div>
+
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example5">Image</label>
+            <label class="form-label" for="form6Example5">Currently :  {{ product.image.url }}</label>
+            <br>
+            <label class="form-label" for="form6Example5">Change</label>
+            <input class="input-file" type="file" name="image" >
+    </div>
+
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">Quantity</label>
+        <input type="number" name="quantity" class="form-control"  value="{{ product.quantity }}"/>
+    </div>
+
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">Description</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description" required>
+            {{ product.description }}
+        </textarea>
+    </div>
+    
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">Original price</label>
+        <input type="number" name="original_price" class="form-control" value="{{ product.original_price }}"/>
+    </div>
+    
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">Selling price</label>
+        <input type="number" name="selling_price" class="form-control" value="{{ product.selling_price }}" />
+    </div>
+      
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example5">Status</label>
+        <input type="checkbox" name="status" {% if product.status == 1 %}  value=1 checked  {% else %} value=0 {% endif %} />
+    </div>
+
+    <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example5">Trending</label>
+        <input type="checkbox" name="trending"{% if product.trending == 1 %}  value=1 checked  {% else %} value=0 {% endif %} />
+    </div>
+      
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary btn-block mb-4">Update </button>
+      </form>
+</div>
+
+{% endblock content %}

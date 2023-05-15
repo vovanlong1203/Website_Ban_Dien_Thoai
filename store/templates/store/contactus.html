@@ -1,0 +1,48 @@
+{% extends 'store/layouts/main.html' %}
+
+{% block content %}
+
+
+    <main>
+		<div class="container mt-5 p-5 ">
+			<div class="row">
+				<div class="col-md-6">
+					<h1>Gửi yêu cầu liên hệ</h1>
+                    <p>Nếu bạn có bất kỳ câu hỏi hoặc ý kiến ​​nào, hãy liên hệ với chúng tôi bằng cách điền vào biểu mẫu dưới đây.</p>
+					<form method="POST" action="{% url 'add_contact' %}">
+						{% csrf_token %}
+						
+						<div class="mb-3">
+							<label for="name" class="form-label">Name:</label>
+							<input type="text" class="form-control" id="name" name="name" required>
+						</div>
+						<div class="mb-3">
+							<label for="email" class="form-label">Email:</label>
+							<input type="email" class="form-control" id="email" name="email" required>
+						</div>
+						<div class="mb-3">
+							<label for="subject" class="form-label">Subject:</label>
+							<input type="text" class="form-control" id="subject" name="subject" required>
+						</div>
+						<div class="mb-3">
+							<label for="message" class="form-label">Message:</label>
+							<textarea class="form-control" id="message" rows="5" name="message" required></textarea>
+						</div>
+						<button type="submit" class="btn btn-primary">Send Message</button>
+					</form>
+				</div>
+				<div class="col-md-6">
+					<h1>Thông tin liên hệ</h1>
+					<ul class="list-unstyled">
+						<li><i class="fas fa-map-marker-alt"></i> Địa chỉ: 123 Đường ABC, Quận XYZ, TP.ĐN</li>
+						<li><i class="fas fa-envelope"></i> Email: contact@company.com</li>
+						<li><i class="fas fa-phone"></i> Số điện thoại: 0123456789</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</main>
+    
+
+    {% include 'store/inc/footer.html' %}
+{% endblock content %}

@@ -1,0 +1,31 @@
+{% extends 'store/layouts/main.html' %}
+
+{% block content %}
+    <h1 class="text-center">Collection Page</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Collection</h1>
+            <hr>
+            <div class="row">
+                {% for cat in category  %}
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="{{ cat.image.url }}" class="card-img-top" alt="{{ cat.name }}" class="w-50" >
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{ cat.name }}</h5>
+                        </div>
+                        
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% include 'store/inc/footer.html' %}
+
+
+{% endblock content %}

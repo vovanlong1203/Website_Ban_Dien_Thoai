@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container">
+          <a class="navbar-brand" href="{% url 'home' %}">E-SHOP</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="mynavbar">
+            <ul class="navbar-nav ">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Catogory
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  {% for cat in category %}
+                    <li><a class="dropdown-item" href="{% url 'category_view' cat.id %}">{{ cat.name }}</a></li>
+                  {% endfor %}
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'contactus' %}" hr>Contact us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'aboutus' %}">About us</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'order' %}">Order</a>
+              </li>
+      
+            </ul>
+            <form class="d-flex ms-auto" method="POST" action="{% url 'search_product' %}">
+              {% csrf_token %}
+              <input class="form-control me-2" name="search" type="text" placeholder="Search">
+              <button class="btn btn-primary" type="submit">Search</button>
+            </form>
+          <ul class="navbar-nav">
+            <!-- {% if user.is_authenticated %} -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ username }}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                  <li><a class="dropdown-item" href="{% url 'changepassword_view' %}">Change Password</a></li>
+                  <li><a class="dropdown-item" href="{% url 'signout' %}">Logout</a></li>
+
+              </ul>
+            </li>
+
+            <li class="nav-item mx-2">
+                <a href="{%url 'cart' %}" class="nav-link text-white"><span class="badge bg-danger" id="num_of_items">{{ cart.num_of_items }}</span><i class="fas fa-shopping-cart"></i> Cart </a>
+              </li>
+            <!-- {% else %} -->
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'signup' %}">Sign up</a>
+            </li> -->
+
+            <!-- {% endif %} -->
+          </ul>
+          </div>
+        </div>
+      </nav>
+</body>
+</html>

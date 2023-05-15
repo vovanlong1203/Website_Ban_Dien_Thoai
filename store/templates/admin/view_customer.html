@@ -1,0 +1,82 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+  </style>
+</head>
+<!--
+written By : sumit kumar
+facebook : fb.com/sumit.luv
+-->
+<div class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title">Total Customer List</h6>
+    </div>
+    <table class="table table-hover" id="dev-table">
+      <thead>
+        <tr>
+          <th>UserName</th>
+          <th>Email address</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Update</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      {% for c in customers %}
+      <tr>
+        <td> {{c.username}}</td>
+        <td> {{ c.email }} </td>
+        <td>{{c.first_name}}</td>
+        <td>{{c.last_name}}</td>
+        <td><a class="btn btn-primary btn-xs" href="{% url 'customer_update_view' c.id %}"><span class="glyphicon glyphicon-edit"></span></a></td>
+        <td><a class="btn btn-danger btn-xs" href="{% url 'delete_customer' c.id %}"><span class="glyphicon glyphicon-trash"></span></a></td>
+
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  {% if customers.has_other_pages %}
+  <ul class="pagination">
+    {% if customers.has_previous %}
+      <li><a href="?page={{ customers.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in customers.paginator.page_range %}
+      {% if customers.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if customers.has_next %}
+      <li><a href="?page={{ customers.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+</div>
+
+{% endblock content %}

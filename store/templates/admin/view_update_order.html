@@ -1,0 +1,76 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+
+
+<div class="container mt-5">
+    <form action="{% url 'update_status_order' %}" method="POST">
+      {% csrf_token %}
+      <input type="hidden" value="{{ order.id }}" name="id_order" />
+      <div class="form-outline mb-4">
+        <label class="form-label" for="form6Example3">User name</label>
+      <input type="text" id="form6Example3" class="form-control" name="username" value="{{ order.user.username }}" readonly/>
+    </div>
+        <!-- 2 column grid layout with text inputs for the first and last names -->
+        <div class="row mb-4">
+          <div class="col">
+            <div class="form-outline">
+                <label class="form-label" for="form6Example1">First name</label>
+              <input type="text" id="form6Example1" class="form-control" name="firstname" value="{{ order.first_name }}" required readonly/>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-outline">
+                <label class="form-label" for="form6Example2">Last name</label>
+              <input type="text" id="form6Example2" class="form-control" name="lastname" value="{{ order.last_name }}" required readonly/>
+            </div>
+          </div>
+        </div>
+      
+      
+        <!-- Text input
+        <div class="form-outline mb-4">
+            <label class="form-label" for="form6Example4">Address</label>
+          <input type="text" id="form6Example4" class="form-control" />
+        </div> -->
+      
+        <!-- Email input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="form6Example5">Email</label>
+          <input type="email" id="form6Example5" class="form-control" name="email" value="{{ order.email }}" required readonly/>
+        </div>
+        <div class="form-outline mb-4">
+            <label class="form-label" for="form6Example2">Address</label>
+          <input type="text" id="form6Example2" class="form-control" name="address" value="{{ order.address }}" required readonly/>
+        </div>
+
+        <div class="form-outline mb-4">
+            <label class="form-label" for="form6Example2">Phone Number</label>
+          <input type="text" id="form6Example2" class="form-control" name="phone" value="{{ order.phone }}" required readonly/>
+        </div>
+        
+        <select class="form-select" aria-label="Default select example" name="status" >
+            {% for i in status_list %} 
+            {% if i == order.status %}
+            <option value="{{ i }}" selected>{{ i }}</option>
+            {% else %}
+            <option value="{{ i }}"  > {{ i }}</option>
+            {%endif%}
+
+            {% endfor %}
+          </select>
+          <br>
+        <div class="form-outline    mb-4">
+            <label class="form-label" for="form6Example2">Total </label>
+        <input type="text" id="form6Example2" class="form-control" name="phone" value="{{ order.total|floatformat:"g" }}" readonly/>
+        </div>
+
+      
+
+
+      
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary btn-block mb-4">Update </button>
+      </form>
+</div>
+
+{% endblock content %}

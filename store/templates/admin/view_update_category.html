@@ -1,0 +1,42 @@
+{% extends 'admin/admin_base.html' %}
+{% block content %}
+
+<div class="container mt-5 vh-100">
+    <form action="{% url 'update_category' %}" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="hidden" value="{{ category.id }}" name="id_category" />
+      <br>
+        <div class="form-outline mb-4">
+            <label class="form-label" for="form6Example3">Name</label>
+            <input type="text" id="form6Example3" class="form-control" name="name" value="{{ category.name }}" />
+        </div>
+
+      
+        <div class="form-outline mb-4">
+            <label class="form-label" for="form6Example5">Image</label>
+            <label class="form-label" for="form6Example5">Currently :  {{ category.image.url }}</label>
+            <br>
+            <label class="form-label" for="form6Example5">Change</label>
+            <input type="file" id="form6Example5"  name="image" />
+        </div>
+        <div class="form-outline mb-4">
+            <label class="form-label" for="form6Example2">Description:  </label>
+          <textarea id="description" class="form-control" name="description" rows="4" cols="100" >
+            {{ category.description }}
+          </textarea>
+        </div>
+        <div class="form-outline mb-4">
+            <label class="form-label" for="form6Example2">Status (0-default 1-Hidden) : </label>
+          <input type="checkbox" id="form6Example2"  name="status" {% if category.status == 1 %}  value=1 checked  {% else %} value=0 {% endif %}/>
+        </div>
+
+
+
+      
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary btn-block mb-4">Update </button>
+      </form>
+</div>
+
+
+{% endblock content %}

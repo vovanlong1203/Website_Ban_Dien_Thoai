@@ -1,0 +1,36 @@
+/* hide Radio Button */
+.checked{
+    color: yellow;
+}
+.rating-wrapper > input{
+    display: none;
+}
+
+.rating-wrapper > label{
+    float: right;
+}
+.rating-wrapper{
+    display: inline-block;
+    border: 0;
+}
+
+.rating-wrapper{
+    float: left;
+}
+/* showing the stars */
+.rating-wrapper > label:before{
+    display: inline-block;
+    font-size: 1.1rem;
+    content: "\f005";
+    margin: 0;
+    padding: 0.3rem .2rem;
+    cursor: pointer;
+}
+
+
+input:checked ~ label , label:hover ~ label {
+    color: yellow;
+}
+
+
+

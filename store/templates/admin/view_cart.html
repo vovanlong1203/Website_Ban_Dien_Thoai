@@ -1,0 +1,102 @@
+{% extends 'admin/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+
+    .float{
+	position:fixed;
+	width:70px;
+	height:70px;
+	bottom:60px;
+	right:60px;
+	background-color:red;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 3px 3px 3px #999;
+}
+
+.my-float{
+	margin-top:22px;
+}
+  </style>
+</head>
+
+
+
+<div class="container vh-100">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title">Cart List</h6>
+    </div>
+    <table class="table table-hover" id="dev-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User</th>
+          <th>Complete</th>
+
+        </tr>
+      </thead>
+      {% for p in carts %}
+      {% if p %}
+
+      <tr>
+        <td> {{p.id}}</td>
+        <td>{{ p.user.username }}</td>
+        <td>{{p.completed}}</td>
+
+      </tr>
+      {%else%}
+      <br><br><br>
+      <h1>no products</h1>
+      {% endif %}
+      {% endfor %}
+    </table>
+  </div>
+
+  {% if carts.has_other_pages %}
+  <ul class="pagination">
+    {% if carts.has_previous %}
+      <li><a href="?page={{ carts.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in carts.paginator.page_range %}
+      {% if carts.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if carts.has_next %}
+      <li><a href="?page={{ carts.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+</div>
+<!-- add product floating button -->
+
+
+
+{% endblock content %}
