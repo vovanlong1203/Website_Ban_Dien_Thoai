@@ -18,20 +18,33 @@ from django.contrib.auth.password_validation import validate_password
 def home(request):
     category = Category.objects.filter(status=0)
     product = Product.objects.filter(status=0)
-    product_trend = Product.objects.filter(trending=1)
-    product = random.sample(list(product),20)
-
+    product_count = len(Product.objects.all())
+    product_trend = Product.objects.filter(trending=1)[:8]
+    product_count = len(Product.objects.filter(trending=1))
+    product = random.sample(list(product),12)
+    print("product_count",product_count)
 
     if request.user.is_authenticated:
         cart, created = Cart.objects.get_or_create(user=request.user, completed=False)
     # Lấy username của người dùng
         username = request.user.username
-        conext = {'category':category, 'product':product,'username':username,"cart": cart,"product_trend":product_trend}
+        conext = {'category':category, 'product':product,'username':username,"cart": cart,"product_trend":product_trend,'product_count':product_count}
     else:
-        conext = {'category':category, 'product':product,"product_trend":product_trend}
+        conext = {'category':category, 'product':product,"product_trend":product_trend,'product_count':product_count}
 
     return render(request, 'store/index.html',conext)
 
+
+def load_more_home(request):
+    product = request.GET.get('product_trend')
+    print(product)
+    product_int = int(product)
+    limit = 4
+    product = list(Product.objects.filter(trending=1).values()[product_int:product_int+limit])
+    data = {
+        'product': product
+    }
+    return JsonResponse(data=data)
 
 def contact_us(request):
     category = Category.objects.filter(status=0)
@@ -122,7 +135,6 @@ def category_view(request, pk):
     else:
         context = {'category':category, 'category_tmp':category_tmp, 'products': products, }
 
-
     return render(request, 'store/category.html',context)
     
 
@@ -187,7 +199,7 @@ def login_view(request):
             login(request, user)
             request.session['username'] = username
             username = request.session['username']
-            messages.success(request, "Logged In Sucessfully!!")
+            messages.success(request, "Đăng nhập thành công!!")
             conext = {'category':category, 'product':product, 'username':username}
             return redirect('home')
         else:
@@ -206,6 +218,7 @@ def update_profile_user(request):
         user.last_name =lastname
         user.email = email
         user.save()
+        messages.success(request, "cập nhật thành công")
     return redirect('profile')
 
 def change_password_view(request):
@@ -230,7 +243,7 @@ def update_password_user(request):
         comfirm_pass = request.POST['confirm_newpassword']
         un = user.username
         if new_pass != comfirm_pass:
-            messages.error(request,"Mật khẩu không khớp")
+            messages.warning(request,"Mật khẩu không khớp")
             return redirect('changepassword_view')
         try:
             validate_password(new_pass)
@@ -261,25 +274,21 @@ def signup_view(request):
         pass2 = request.POST['pass2']
 
         if User.objects.filter(username=username):
-            messages.error(request, "Username already exist! Please try some other username.")
-            conext = {'message': 'Username already exist! Please try some other username.'}
+            conext = {'message': 'Tên người dùng đã tồn tại! Vui lòng thử một số tên người dùng khác.'}
             return render(request,'store/signup.html',conext)
 
         if User.objects.filter(email=email).exists():
-            messages.error(request, "Email Already Registered!!")
-            conext = {'message': 'Email Already Registered!!.'}
+            conext = {'message': 'Email đã đăng ký !!.'}
             return render(request,'store/signup.html',conext)
 
         if pass1 != pass2:
-            messages.error(request, "Passwords didn't matched!!")
-            conext = {'message': "Passwords didn't matched!!"}
+            conext = {'message': "Mật khẩu không khớp"}
             return render(request,'store/signup.html',conext)
         
         try:
             validate_password(pass1)
             print("Mật khẩu hợp lệ")
         except Exception as e:
-            messages.error(request,"mật khẩu không hợp lệ!")
             conext = {'category':category, 'message': 'mật khẩu không hợp lệ!'}
             return render(request,'store/signup.html',conext)
         myuser = User.objects.create_user(username,email,pass1)
@@ -287,7 +296,6 @@ def signup_view(request):
         myuser.last_name = lastname
         myuser.is_active = True
         myuser.save()
-        messages.success(request, "Your Account has been created succesfully!! Please check your email to confirm your email address in order to activate your account.")
         
         return render(request, 'store/login.html',{'category':category,'message': 'Đăng kí tài khoản thành công!!'})
 
@@ -296,7 +304,7 @@ def signup_view(request):
 
 def signout_view(request):
     logout(request)
-    messages.success(request, "Logged Out Successfully!!")
+    messages.success(request, "Đăng nhập thành công!!")
     return redirect('home')
 
 
@@ -343,7 +351,6 @@ def place_order(request):
         neworder.email = request.POST['email']
         neworder.address = request.POST['address']
         neworder.phone = request.POST['phonenumber']
-        # neworder.zipcode = request.POST['zipcode']
 
         if neworder.first_name==''or neworder.last_name == ''or neworder.email == ''or neworder.address == ''or neworder.phone == '':
             return redirect('checkout')
@@ -351,14 +358,13 @@ def place_order(request):
         cart, created = Cart.objects.get_or_create(user=request.user, completed=False)
         neworder.total = cart.total_price
         neworder.save()
-        # cart = get_object_or_404(Cart, user=request.user)
         tmp = cart
         for item in cart.cartitems.all():
             order_item = OrderItem(order=neworder, product=item.product, quantity=item.quantity,price=item.product.selling_price, total_price= item.price)
             order_item.save()
             item.delete()
 
-    messages.success(request,"thanh cong")
+    messages.success(request,"Đặt hàng thành công ")
     return redirect('home')
 
 def order(request):

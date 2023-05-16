@@ -126,40 +126,15 @@ section .productslide{
 		</section>
 	</main>
 
-	
-    <!-- Featured End
-    <br>
-    <div class="container my-5 class1">
-        <header class="mb-4">
-            <h3>Danh mục</h3>
-          </header>
-          <hr>
-        <div class="row">
-            {% for cat in category  %}
-            <div class="col-lg-3 col-md-6 col-sm-6 d-flex slide">
-                <a href="{% url 'category_view' cat.id %}" style="text-decoration: none;">
-                    <div class="card w-100 my-2 shadow-2-strong">
-                        <img src="{{ cat.image.url }}" class="card-img-top" style="width:300px; height:250px;" />
-                        <div class="card-body d-flex flex-column">
-                            <h6 class="card-title text-center">{{ cat.name }}</h6>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            {% endfor %}
-        </div>
-
-    </div> -->
-
     <br>
     <div class="container my-5">
         <header class="mb-4">
             <h3>Sản phẩm nổi bật</h3>
           </header>
           <hr>
-        <div class="row">
+        <div class="row" id="row1">
             {% for pro in product_trend  %}
-            <div class="col-lg-3 col-md-6 col-sm-6 d-flex .carousel-item">
+            <div class="col-lg-3 col-md-6 col-sm-6 d-flex .carousel-item pro_trending">
                 <div class="card w-100 my-2 shadow-2-strong">
                     <img src="{{ MEDIA_URL }}{{ pro.image.url }}" class="card-img-top" style="aspect-ratio: 1 / 1" />
                     <div class="card-body d-flex flex-column">
@@ -179,7 +154,25 @@ section .productslide{
             {% endfor %}
         </div>
     </div>
+<br>
+<style>
+    .not-visible {
+        display: none;
+    }
+</style>
 
+<div class="container">
+    <div class="spinner-border text-primary mt-2 not-visible" role="status" id="spinner">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <div class="load-more__btn mt-3 text-center m-2" id="btn1">
+        <button type="button" class="btn btn-success">Load More</button>
+        
+    </div>
+    <div class="alert alert-danger mt-2 not-visible" role="alert" id='alert'>
+        No more product to load!!
+    </div>
+</div>
     
 <br>
     <div class="container my-5">
@@ -216,7 +209,6 @@ section .productslide{
           let span = document.getElementsByTagName('span');
           let product = document.getElementsByClassName('productslide');
           let product_page = Math.ceil(product.length/4);
-          console.log(product_page)
           let l = 0;
           let movePer = 25.34;
           let maxMove = 203;
@@ -249,7 +241,81 @@ section .productslide{
           span[6].onclick = ()=>{left_mover();};
         });
         
-            </script>
+        </script>
+
+        {{product_count|json_script:"json-total"}}      
+        <script type="text/javascript">
+            const loadBtn = document.getElementById('btn1');
+            const spinner = document.getElementById('spinner');
+            const total = JSON.parse(document.getElementById('json-total').textContent);
+            console.log("total",total)
+            const alert = document.getElementById('alert');
+            
+          function loadmorePost() {
+            var _current_item = $('.pro_trending').length
+            console.log(_current_item)
+            
+            const content_container = document.getElementById("row1");
+
+            $.ajax({
+                url: '{% url "load_more_home" %}',
+                type: 'GET',
+                data: {
+                    'product_trend': _current_item
+                },
+                beforeSend: function () {
+                    loadBtn.classList.add('not-visible');
+                    spinner.classList.remove('not-visible');
+                },
+                success: function (response) {
+                    const data = response.product
+                    spinner.classList.add('not-visible')
+
+                    data.map(pro => {
+                        const formattedSellingPrice = pro.selling_price.toFixed(1);
+                        const formattedOriginalPrice = pro.original_price.toFixed(1);
+                        var pricesell_str = pro.selling_price.toLocaleString('vi-VN', {style: 'currency', currency: 'VND', minimumFractionDigits: 0, maximumFractionDigits: 1});
+                        var priceori_str = pro.original_price.toLocaleString('vi-VN', {style: 'currency', currency: 'VND', minimumFractionDigits: 0, maximumFractionDigits: 2});
+                        var pricesell_str = pricesell_str.replace(/\./g, ',');
+                        var priceori_str = priceori_str.replace(/\./g, ',');
+
+                        console.log(priceori_str);
+                        console.log(pricesell_str);
+                        const image= '	http://127.0.0.1:8000/images/'+pro.image
+                        const productDetailUrl = `http://127.0.0.1:8000/products/${pro.id}/`;
+                        content_container.innerHTML += ` <div class="col-lg-3 col-md-6 col-sm-6 d-flex .carousel-item pro_trending">
+                                                            <div class="card w-100 my-2 shadow-2-strong">
+                                                                <img src="${image}" class="card-img-top" style="aspect-ratio: 1 / 1" />
+                                                                <div class="card-body d-flex flex-column">
+                                                                <h6 class="card-title text-center">${pro.name}</h6>
+                                                                ${pro.selling_price != pro.original_price ?
+                                                                    `<p class="card-text">${pricesell_str} <small class="fw-light text-decoration-line-through">${priceori_str}</small></p>` :
+                                                                    `<p class="card-text">${pricesell_str}</p>`}
+                                                                <div class="align-items-end pt-3 px-0 pb-0 mt-auto">
+                                                                    <a href="${productDetailUrl}" class="btn btn-primary">View details</a>
+                                                                </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        `
+                    })
+                    if (_current_item == total) {
+                        alert.classList.remove('not-visible');
+                    } else {
+                        loadBtn.classList.remove('not-visible');
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                },
+            });
+        }
+        loadBtn.addEventListener('click', () => {
+            loadmorePost()
+        });
+
+            
+        </script>
 
     {% include 'store/inc/footer.html' %}
 

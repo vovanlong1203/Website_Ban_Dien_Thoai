@@ -85,4 +85,6 @@ urlpatterns = [
      path('update_status_order/', views.update_status_order, name='update_status_order'),
 
      path('view_contactus/', views.contactus_view, name='view_contactus'),
+     path('load_more_home/', views.load_more_home, name='load_more_home'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
